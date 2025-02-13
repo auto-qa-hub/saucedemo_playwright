@@ -5,7 +5,7 @@ Link for SauceDemo web application - https://www.saucedemo.com
 
 ## 1.1 Objective
 
-The purpose of this test plan is to define the scope, approach, resources, and schedule for the automation of the SauceDemo web application using Playwright with TypeScript. The objective is to ensure functional correctness, performance efficiency, and reliability of critical workflows through automated tests.
+This test plan defines the scope, approach, resources, and schedule for automating the SauceDemo web application using Playwright with TypeScript. The objective is to ensure the functional correctness, performance efficiency, and reliability of critical workflows through automated tests.
 
 ## 1.2 Scope
 
@@ -25,7 +25,7 @@ The purpose of this test plan is to define the scope, approach, resources, and s
 
 - Implement Page Object Model (POM) for maintainability
 
-- Execute tests in headless and headed mode for debugging
+- Execute tests in the headless and headed mode for debugging
 
 - Use CI/CD integration for test execution on each deployment
 
@@ -89,15 +89,15 @@ The purpose of this test plan is to define the scope, approach, resources, and s
 
 ## 5.1 Test Execution Strategy
 
-- Execute tests locally before pushing to local branch
-- Create pull request
+- Execute tests locally before pushing them to the local branch
+- Create a pull request
 - Run automated tests on every code commit via CI/CD
 - Push to the main branch changes (if all tests are passed)
 
 ## 5.2 Test Execution Schedule
 
 - Every pull request creation
-- After merging chnage sto the main
+- After merging change to the main
 
 # 6. Risks & Mitigation
 
@@ -128,6 +128,6 @@ The purpose of this test plan is to define the scope, approach, resources, and s
 - Playwright HTML Reports
 - Allure Reports for detailed analysis
 
-# 9. Conclusion
+# 8. Conclusion
 
-This test plan serves as a roadmap for effectively automating the SauceDemo website using Playwright and TypeScript. By following structured testing strategies, defect management, and risk mitigation, we aim to ensure the quality and reliability of the application while streamlining the testing process.
+This test plan is a roadmap for effectively automating the SauceDemo website using Playwright and TypeScript. By following structured testing strategies, defect management, and risk mitigation, we aim to ensure the quality and reliability of the application while streamlining the testing process.
