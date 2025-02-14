@@ -6,20 +6,20 @@ test.describe("Main Page tests", () => {
         const mainPage = new MainPage(page);
         await mainPage.visitMainPage();
 
-    //Перевірка, що поле "Username" відображається
+    //Verify that the "Username" field is displayed
     await expect(page.locator('input[data-test="username"]')).toBeVisible();
 
-    //Перевірка, що поле "Password" відображається
+    //Verify that the "Password" field is displayed
     await expect(page.locator('input[data-test="password"]')).toBeVisible();
 
-    //Перевірка, що кнопка "Login" відображається і активна
+    //Verify that the "Login" button is visible and active
     await expect(page.locator('input[data-test="login-button"]')).toBeVisible();
     await expect(page.locator('input[data-test="login-button"]')).toBeEnabled();
 
-    //Перевірка, що список користувачів відображається
+    //Verify that the user list is displayed
     await expect(page.locator('div[data-test="login-credentials"]')).toBeVisible();
 
-    //Перевірка, що блок з паролем відображається
+    //Checking that the password block is displayed
     await expect(page.locator('div[data-test="login-password"]')).toBeVisible();
     });
 });
