@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { MainPage } from './pages/MainPage';
+import { MainPage } from '../page_objects_ts/MainPage';
 import usersData from '../fixtures/usersData.json';
 
 test.describe("Standard user tests", () => {
