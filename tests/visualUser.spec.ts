@@ -2,12 +2,14 @@ import { test, expect } from "@playwright/test";
 import { MainPage } from "../page_objects_ts/MainPage";
 import usersData from "../fixtures/usersData.json";
 import { InventoryPage } from "../page_objects_ts/InventoryPage";
-import usersBillingData from "../fixtures/usersBillingData.json";
+import { UserMenuPage } from "../page_objects_ts/UserMenuPage";
+
 
 test.describe("Visual user tests", () => {
   test("Visual user issues", async ({ page }) => {
     const mainPage = new MainPage(page);
     const inventoryPage = new InventoryPage(page);
+    const userMenuPage = new UserMenuPage(page);
     const username = usersData.users[5];
     const password = usersData.password;
 
@@ -21,11 +23,11 @@ test.describe("Visual user tests", () => {
     await mainPage.loginButton();
 
     await page.waitForURL("/inventory.html");
-    await inventoryPage.UserMenuIcon();
+    await userMenuPage.UserMenuIcon();
     await expect(
       page.locator('img[class*="bm-cross visual_failure"]')
     ).toBeVisible();
-    await inventoryPage.closeMenuIcon();
+    await userMenuPage.closeMenuIcon();
     await expect(
       page.locator('img[class*="bm-cross visual_failure"]')
     ).toBeVisible();
