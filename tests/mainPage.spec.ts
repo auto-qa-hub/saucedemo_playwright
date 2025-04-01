@@ -1,10 +1,10 @@
 import { test, expect } from '@playwright/test';
-import { MainPage } from '../page_objects_ts/MainPage';
+import { POManager } from '../page_objects_ts/POManager';
 
 test.describe("Main Page tests", () => {
     test('Visit Main Page', async ({ page }) => {
-        const mainPage = new MainPage(page);
-        await mainPage.visitMainPage();
+        const poManager = new POManager(page);
+        await poManager.mainPage.visitMainPage();
 
     //Verify that the "Username" field is displayed
     await expect(page.locator('input[data-test="username"]')).toBeVisible();
