@@ -1,33 +1,29 @@
 import { test, expect } from "@playwright/test";
-import { MainPage } from "../page_objects_ts/MainPage";
 import usersData from "../fixtures/usersData.json";
-import { InventoryPage } from "../page_objects_ts/InventoryPage";
-import { UserMenuPage } from "../page_objects_ts/UserMenuPage";
+import { POManager } from "../page_objects_ts/POManager";
 
 
 test.describe("Visual user tests", () => {
   test("Visual user issues", async ({ page }) => {
-    const mainPage = new MainPage(page);
-    const inventoryPage = new InventoryPage(page);
-    const userMenuPage = new UserMenuPage(page);
+    const poManager = new POManager(page);
     const username = usersData.users[5];
     const password = usersData.password;
 
-    await mainPage.visitMainPage();
-    await mainPage.fillUsername(username);
-    await mainPage.fillPassword(password);
+    await poManager.mainPage.visitMainPage();
+    await poManager.mainPage.fillUsername(username);
+    await poManager.mainPage.fillPassword(password);
 
     await expect(page.locator('input[name="user-name"]')).toHaveValue(username);
     await expect(page.locator('input[name="password"]')).toHaveValue(password);
 
-    await mainPage.loginButton();
+    await poManager.mainPage.loginButton();
 
     await page.waitForURL("/inventory.html");
-    await userMenuPage.UserMenuIcon();
+    await poManager.userMenuPage.UserMenuIcon();
     await expect(
       page.locator('img[class*="bm-cross visual_failure"]')
     ).toBeVisible();
-    await userMenuPage.closeMenuIcon();
+    await poManager.userMenuPage.closeMenuIcon();
     await expect(
       page.locator('img[class*="bm-cross visual_failure"]')
     ).toBeVisible();
@@ -50,12 +46,12 @@ test.describe("Visual user tests", () => {
     await expect(shoppingCart).toHaveClass(
       /shopping_cart_container\s+visual_failure/
     );
-    await inventoryPage.addToCartFirstItem();
+    await poManager.inventoryPage.addToCartFirstItem();
     await expect(
       page.locator('a span[class="shopping_cart_badge"]')
     ).toBeVisible();
 
-    await inventoryPage.ShopContainerIcon();
+    await poManager.inventoryPage.ShopContainerIcon();
     await page.goto("/cart.html");
     // Locate the item name using data-test attribute
     const itemName = page.locator('[data-test="inventory-item-name"]');
