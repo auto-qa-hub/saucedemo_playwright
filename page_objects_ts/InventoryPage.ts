@@ -1,6 +1,7 @@
 import { Locator, Page } from "@playwright/test";
 export class InventoryPage {
   page: Page;
+
   addToCartFirstButtonItem: Locator;
   removeButtonFirstItem: Locator;
 
@@ -21,6 +22,8 @@ export class InventoryPage {
 
   shoppingContainerIcon: Locator;
   shoppingCartBagde: Locator;
+
+  productsSoftContainer: Locator
 
   constructor(page: Page) {
     this.page = page;
@@ -44,6 +47,7 @@ export class InventoryPage {
 
     this.shoppingContainerIcon = page.locator("#shopping_cart_container");
     this.shoppingCartBagde = page.locator('a span[class="shopping_cart_badge"]');
+    this.productsSoftContainer = page.locator('.product_sort_container');
   }
 
   async addToCartFirstItem() {
@@ -84,6 +88,9 @@ export class InventoryPage {
   }
   async ShopContainerIcon() {
     await this.shoppingContainerIcon.click();
+  }
+  async ProductsSortingClick() {
+    await this.productsSoftContainer.click();
   }
 }
 
