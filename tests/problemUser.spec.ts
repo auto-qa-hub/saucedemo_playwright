@@ -2,18 +2,60 @@ import { test, expect } from "@playwright/test";
 import usersData from "../fixtures/usersData.json";
 import { POManager } from "../page_objects_ts/POManager";
 
-test.describe("Tests for error user", () => {
-  test("Login, adding and remove from cart items", async ({ page }) => {
+test.describe("Problem user tests", () => {
+  test("Problem user sees the same image for all products", async ({
+    page,
+  }) => {
     const poManager = new POManager(page);
-    const username = usersData.users[4];
+    const username = usersData.users[2]; // "problem_user"
     const password = usersData.password;
 
+    // Step 1: Login
     await poManager.mainPage.visitMainPage();
     await poManager.mainPage.fillUsername(username);
     await poManager.mainPage.fillPassword(password);
+
+    await expect(page.locator('input[name="user-name"]')).toHaveValue(username);
+    await expect(page.locator('input[name="password"]')).toHaveValue(password);
+
     await poManager.mainPage.loginButton();
     await page.waitForURL("/inventory.html");
 
+    // Step 2: Verify all product images are visible
+    const productItems = await page.locator(".inventory_item");
+    const count = await productItems.count();
+
+    for (let i = 0; i < count; i++) {
+      const image = productItems.nth(i).locator("img");
+      await expect(image).toBeVisible();
+    }
+
+    // Step 3: Assert all images have the same `src` attribute
+    const allImageSrcs = await page.$$eval(".inventory_item img", (imgs) =>
+      imgs.map((img) => img.getAttribute("src"))
+    );
+
+    const uniqueSrcs = new Set(allImageSrcs);
+    expect(uniqueSrcs.size).toBe(1); // Problem user sees repeated images
+  });
+
+  test("Problem user login, adding and remove from cart items", async ({
+    page,
+  }) => {
+    const poManager = new POManager(page);
+    const username = usersData.users[2]; // "problem_user"
+    const password = usersData.password;
+
+    // Step 1: Login
+    await poManager.mainPage.visitMainPage();
+    await poManager.mainPage.fillUsername(username);
+    await poManager.mainPage.fillPassword(password);
+
+    await expect(page.locator('input[name="user-name"]')).toHaveValue(username);
+    await expect(page.locator('input[name="password"]')).toHaveValue(password);
+
+    await poManager.mainPage.loginButton();
+    await page.waitForURL("/inventory.html");
     await poManager.inventoryPage.addToCartFirstItem();
     await expect(poManager.inventoryPage.removeButtonFirstItem).toBeVisible();
     await poManager.inventoryPage.removeFirstItem();
@@ -46,40 +88,24 @@ test.describe("Tests for error user", () => {
     await poManager.inventoryPage.addToCart6thItem();
     await expect(poManager.inventoryPage.addToCartButton6thItem).toBeVisible();
     await expect(poManager.inventoryPage.removeButton6thItem).not.toBeVisible();
+
+    await poManager.inventoryPage.ShopContainerIcon();
+    const itemsToRemove = [
+      "Sauce Labs Backpack",
+      "Sauce Labs Bike Light",
+      "Sauce Labs Onesie",
+    ];
+
+    for (const item of itemsToRemove) {
+      await poManager.cartPage.removeItemByName(item);
+      await poManager.cartPage.assertItemRemovedByName(item);
+    }
   });
-
-  test("Verify sorting error modal", async ({ page }) => {
+  test("Last name field issue that causing failure with purshase", async ({
+    page,
+  }) => {
     const poManager = new POManager(page);
-    const username = usersData.users[4];
-    const password = usersData.password;
-
-    // Login to the application
-    await poManager.mainPage.visitMainPage();
-    await poManager.mainPage.fillUsername(username);
-    await poManager.mainPage.fillPassword(password);
-    await poManager.mainPage.loginButton();
-    await page.waitForURL("/inventory.html");
-
-    // Set up alert handling BEFORE triggering sorting
-    const dialogPromise = new Promise((resolve) => {
-      page.once("dialog", async (dialog) => {
-        console.log("Dialog message:", dialog.message());
-        expect(dialog.message()).toContain("Sorting is broken!");
-        await dialog.dismiss(); // Clicks "OK"
-        resolve(true);
-      });
-    });
-
-    // Select the sorting option
-    await page.selectOption(".product_sort_container", "za");
-
-    // Ensure the alert was handled
-    await dialogPromise;
-  });
-
-  test("Last name field issue that causing failure with purshase", async ({ page }) => {
-    const poManager = new POManager(page);
-    const username = usersData.users[4];
+    const username = usersData.users[2];
     const password = usersData.password;
 
     // Login to the application
@@ -98,15 +124,12 @@ test.describe("Tests for error user", () => {
       "34221"
     );
     await poManager.checkoutStepOnePage.submitCheckout();
-    await poManager.checkoutStepTwoPage.completeCheckout();
-
-    // Assert Finish button is visible and enabled (clickable)
-    await expect(poManager.checkoutStepTwoPage.finishButton).toBeVisible();
-    await expect(poManager.checkoutStepTwoPage.finishButton).toBeEnabled();
-
+    await expect(page.locator(".error-message-container")).toHaveText(
+      "Error: Last Name is required"
+    );
     await page.waitForTimeout(1000);
 
     // Assert the user remains on the same page (URL does not change)
-    await expect(page).toHaveURL("/checkout-step-two.html");
+    await expect(page).toHaveURL("/checkout-step-one.html");
   });
 });
