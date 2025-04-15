@@ -19,6 +19,27 @@ test.describe("Standard user tests", () => {
 
         await page.waitForURL('/inventory.html');
 
+         //add to cart all items
+         await page.waitForSelector('button:has-text("Add to cart")');
+         while (await page.locator('button:has-text("Add to cart")').count() > 0) {
+         await page.locator('button:has-text("Add to cart")').first().click();
+         }
+ 
+         //remove from cart all items
+         await page.waitForSelector('button:has-text("Remove")');
+         while (await page.locator('button:has-text("Remove")').count() > 0) {
+         await page.locator('button:has-text("Remove")').first().click();
+         }
+ 
+         await page.locator('button:has-text("Add to cart")').first().click();
+         await page.click('.shopping_cart_link');
+         await poManager.cartPage.clickCheckout();
+ 
+         await poManager.checkoutStepOnePage.enterCheckoutDetails('John', 'Doe', '12345');
+         await poManager.checkoutStepOnePage.submitCheckout();
+         await poManager.checkoutStepTwoPage.completeCheckout();
+ 
+         await poManager.userMenuPage.UserMenuIcon();
+         await poManager.userMenuPage.Logout();
     });
-    
 });
